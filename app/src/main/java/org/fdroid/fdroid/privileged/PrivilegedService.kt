@@ -174,10 +174,12 @@ class PrivilegedService : Service() {
             }
 
             val receiver = LocalIntentReceiver()
-            session.commit(receiver.getIntentSender())
-            val intent = receiver.getResult()
-            intent.action = BROADCAST_ACTION_INSTALL
-            context.sendBroadcast(intent)
+            Thread {
+                session.commit(receiver.getIntentSender())
+                val intent = receiver.getResult()
+                intent.action = BROADCAST_ACTION_INSTALL
+                context.sendBroadcast(intent)
+            }.start()
         } catch (e: IOException) {
             Log.d(TAG, "Failure", e)
             Toast.makeText(this@PrivilegedService, e.localizedMessage, Toast.LENGTH_LONG).show()
@@ -307,12 +309,12 @@ class PrivilegedService : Service() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BROADCAST_ACTION_INSTALL)
         registerReceiver(
-            mBroadcastReceiver, intentFilter, BROADCAST_SENDER_PERMISSION, null /*scheduler*/
+            mBroadcastReceiver, intentFilter
         )
         val intentFilter2 = IntentFilter()
         intentFilter2.addAction(BROADCAST_ACTION_UNINSTALL)
         registerReceiver(
-            mBroadcastReceiver, intentFilter2, BROADCAST_SENDER_PERMISSION, null /*scheduler*/
+            mBroadcastReceiver, intentFilter2
         )
     }
 
