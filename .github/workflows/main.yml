@@ -117,7 +117,6 @@ jobs:
       run: |
         find ./build/.app/outputs/
         find ./build/.app/outputs -name '*.apk' -exec mv {} $BUILD_NAME_WITH_VERSION-android.apk \;
-        find ./build/.app/outputs -name 'mapping.txt' -exec mv {} $BUILD_NAME_WITH_VERSION-android-mapping.txt \;
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
@@ -145,16 +144,6 @@ jobs:
         asset_path: ${{ env.BUILD_NAME_WITH_VERSION }}-android.apk
         asset_name: ${{ env.BUILD_NAME_WITH_VERSION }}-android.apk
         asset_content_type: application/zip
-    - name: Upload android mapping
-      if: ${{ env.CREATE_RELEASE == 'true' }}
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.BUILD_NAME_WITH_VERSION }}-android-mapping.txt
-        asset_name: ${{ env.BUILD_NAME_WITH_VERSION }}-android-mapping.txt
-        asset_content_type: text/plain
     - name: public release
       if: ${{ env.CREATE_RELEASE == 'true' }}
       uses: eregon/publish-release@v1
