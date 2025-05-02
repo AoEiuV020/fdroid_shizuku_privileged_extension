@@ -16,6 +16,7 @@ buildscript {
 }
 
 allprojects {
+    project.layout.buildDirectory.set(new File(rootProject.file("build"), project.path.replace(":", ".")))
     repositories {
         mavenCentral()
         google()
